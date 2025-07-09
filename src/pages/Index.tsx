@@ -1,19 +1,13 @@
 
-import { useState, useEffect, useMemo } from "react";
-import { Search, MapPin, Wifi, Shield, Utensils, Car, Dumbbell, Zap, Users, Star, Filter } from "lucide-react";
+import { useState, useMemo } from "react";
+import { MapPin, Wifi, Shield, Utensils, Car, Dumbbell, Zap, Users, Star, Filter } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Slider } from "@/components/ui/slider";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import HostelCard from "@/components/HostelCard";
 import HostelDetails from "@/components/HostelDetails";
-
-const colleges = [
-  "IIT Delhi", "Delhi University", "Jamia Millia Islamia", "JNU", "NSUT", 
-  "DTU", "Amity University", "GGSIPU", "Sharda University", "Bennett University"
-];
 
 const mockHostels = [
   {
@@ -74,11 +68,6 @@ const mockHostels = [
 ];
 
 const Index = () => {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [filteredColleges, setFilteredColleges] = useState<string[]>([]);
-  const [showSuggestions, setShowSuggestions] = useState(false);
-  const [selectedCollege, setSelectedCollege] = useState("");
-  const [showHostels, setShowHostels] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
   const [selectedHostel, setSelectedHostel] = useState<any>(null);
   
@@ -90,8 +79,6 @@ const Index = () => {
 
   // Filter hostels based on current filter settings
   const filteredHostels = useMemo(() => {
-    if (!showHostels) return [];
-
     return mockHostels.filter(hostel => {
       // Gender filter
       if (genderFilter !== "all" && hostel.gender.toLowerCase() !== genderFilter.toLowerCase()) {
@@ -121,33 +108,7 @@ const Index = () => {
 
       return true;
     });
-  }, [showHostels, genderFilter, distanceRange, priceRange, sharingType]);
-
-  useEffect(() => {
-    if (searchQuery) {
-      const filtered = colleges.filter(college =>
-        college.toLowerCase().includes(searchQuery.toLowerCase())
-      );
-      setFilteredColleges(filtered);
-      setShowSuggestions(true);
-    } else {
-      setShowSuggestions(false);
-    }
-  }, [searchQuery]);
-
-  const handleCollegeSelect = (college: string) => {
-    setSelectedCollege(college);
-    setSearchQuery(college);
-    setShowSuggestions(false);
-    setShowHostels(true);
-  };
-
-  const handleSearch = () => {
-    if (searchQuery) {
-      setShowHostels(true);
-      setShowSuggestions(false);
-    }
-  };
+  }, [genderFilter, distanceRange, priceRange, sharingType]);
 
   if (selectedHostel) {
     return <HostelDetails hostel={selectedHostel} onBack={() => setSelectedHostel(null)} />;
@@ -170,174 +131,116 @@ const Index = () => {
             HostelNest
           </h1>
           <p className="text-xl text-gray-300 mb-2">Your Hostel, Just a Search Away!</p>
-          <p className="text-gray-400">Find the perfect hostel near your college with futuristic ease</p>
-        </div>
-
-        {/* Search Section */}
-        <div className="max-w-2xl mx-auto mb-12 relative animate-slide-in-up">
-          <Card className="glass-card glow-border p-6">
-            <div className="relative">
-              <div className="relative">
-                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-cyan-400 w-5 h-5" />
-                <Input
-                  type="text"
-                  placeholder="Search by College / Institution Name"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-12 pr-20 py-4 text-lg bg-white/5 border-white/20 rounded-xl focus:border-cyan-400 focus:ring-cyan-400 transition-all"
-                  onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
-                />
-                <Button
-                  onClick={handleSearch}
-                  className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-gradient-primary hover:opacity-80 transition-all rounded-lg"
-                >
-                  Search
-                </Button>
-              </div>
-
-              {/* Auto-suggestions */}
-              {showSuggestions && filteredColleges.length > 0 && (
-                <Card className="absolute top-full mt-2 w-full glass-card border-white/20 z-50 animate-fade-in-scale">
-                  <CardContent className="p-0">
-                    {filteredColleges.slice(0, 5).map((college, index) => (
-                      <div
-                        key={index}
-                        className="px-4 py-3 hover:bg-white/10 cursor-pointer transition-colors border-b border-white/10 last:border-b-0"
-                        onClick={() => handleCollegeSelect(college)}
-                      >
-                        <div className="flex items-center gap-2">
-                          <MapPin className="w-4 h-4 text-cyan-400" />
-                          <span className="text-white">{college}</span>
-                        </div>
-                      </div>
-                    ))}
-                  </CardContent>
-                </Card>
-              )}
-            </div>
-          </Card>
+          <p className="text-gray-400">Find the perfect hostel near GRIET with futuristic ease</p>
         </div>
 
         {/* Filters Section */}
-        {showHostels && (
-          <div className="mb-8 animate-slide-in-up" style={{animationDelay: '0.2s'}}>
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-2xl font-semibold text-white">
-                Hostels near <span className="text-gradient">{selectedCollege}</span>
-                <span className="text-sm text-gray-400 ml-2">
-                  ({filteredHostels.length} found)
-                </span>
-              </h2>
-              <Button
-                onClick={() => setShowFilters(!showFilters)}
-                variant="outline"
-                className="glass-card border-white/20 text-white hover:bg-white/10"
-              >
-                <Filter className="w-4 h-4 mr-2" />
-                Filters
-              </Button>
-            </div>
-
-            {showFilters && (
-              <Card className="glass-card border-white/20 p-6 mb-6 animate-fade-in-scale">
-                <div className="grid md:grid-cols-4 gap-6">
-                  <div>
-                    <label className="text-sm text-gray-300 mb-2 block">Gender</label>
-                    <Select value={genderFilter} onValueChange={setGenderFilter}>
-                      <SelectTrigger className="bg-white/5 border-white/20 text-white">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="all">All</SelectItem>
-                        <SelectItem value="male">Male</SelectItem>
-                        <SelectItem value="female">Female</SelectItem>
-                        <SelectItem value="co-ed">Co-ed</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div>
-                    <label className="text-sm text-gray-300 mb-2 block">
-                      Distance: {distanceRange[0]}km
-                    </label>
-                    <Slider
-                      value={distanceRange}
-                      onValueChange={setDistanceRange}
-                      max={10}
-                      min={0.5}
-                      step={0.5}
-                      className="mt-2"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="text-sm text-gray-300 mb-2 block">
-                      Price: ₹{priceRange[0]}/month
-                    </label>
-                    <Slider
-                      value={priceRange}
-                      onValueChange={setPriceRange}
-                      max={15000}
-                      min={3000}
-                      step={500}
-                      className="mt-2"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="text-sm text-gray-300 mb-2 block">Sharing</label>
-                    <Select value={sharingType} onValueChange={setSharingType}>
-                      <SelectTrigger className="bg-white/5 border-white/20 text-white">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="all">All</SelectItem>
-                        <SelectItem value="2">2 Sharing</SelectItem>
-                        <SelectItem value="3">3 Sharing</SelectItem>
-                        <SelectItem value="4">4 Sharing</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-              </Card>
-            )}
+        <div className="mb-8 animate-slide-in-up">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-2xl font-semibold text-white">
+              Hostels near <span className="text-gradient">GRIET</span>
+              <span className="text-sm text-gray-400 ml-2">
+                ({filteredHostels.length} found)
+              </span>
+            </h2>
+            <Button
+              onClick={() => setShowFilters(!showFilters)}
+              variant="outline"
+              className="glass-card border-white/20 text-white hover:bg-white/10"
+            >
+              <Filter className="w-4 h-4 mr-2" />
+              Filters
+            </Button>
           </div>
-        )}
 
-        {/* Hostel Cards */}
-        {showHostels && (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredHostels.length > 0 ? (
-              filteredHostels.map((hostel, index) => (
-                <div
-                  key={hostel.id}
-                  className="animate-slide-in-up"
-                  style={{animationDelay: `${0.3 + index * 0.1}s`}}
-                >
-                  <HostelCard
-                    hostel={hostel}
-                    onClick={() => setSelectedHostel(hostel)}
+          {showFilters && (
+            <Card className="glass-card border-white/20 p-6 mb-6 animate-fade-in-scale">
+              <div className="grid md:grid-cols-4 gap-6">
+                <div>
+                  <label className="text-sm text-gray-300 mb-2 block">Gender</label>
+                  <Select value={genderFilter} onValueChange={setGenderFilter}>
+                    <SelectTrigger className="bg-white/5 border-white/20 text-white">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All</SelectItem>
+                      <SelectItem value="male">Male</SelectItem>
+                      <SelectItem value="female">Female</SelectItem>
+                      <SelectItem value="co-ed">Co-ed</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div>
+                  <label className="text-sm text-gray-300 mb-2 block">
+                    Distance: {distanceRange[0]}km
+                  </label>
+                  <Slider
+                    value={distanceRange}
+                    onValueChange={setDistanceRange}
+                    max={10}
+                    min={0.5}
+                    step={0.5}
+                    className="mt-2"
                   />
                 </div>
-              ))
-            ) : (
-              <div className="col-span-full text-center py-12">
-                <div className="text-6xl mb-4">🔍</div>
-                <h3 className="text-xl font-semibold text-gray-300 mb-2">No hostels match your filters</h3>
-                <p className="text-gray-400">Try adjusting your filter criteria to see more options</p>
-              </div>
-            )}
-          </div>
-        )}
 
-        {/* Empty State */}
-        {!showHostels && (
-          <div className="text-center py-20 animate-fade-in-scale">
-            <div className="text-6xl mb-6">🏠</div>
-            <h3 className="text-2xl font-semibold text-gray-300 mb-2">Ready to find your perfect hostel?</h3>
-            <p className="text-gray-400">Start by searching for your college or institution above</p>
-          </div>
-        )}
+                <div>
+                  <label className="text-sm text-gray-300 mb-2 block">
+                    Price: ₹{priceRange[0]}/month
+                  </label>
+                  <Slider
+                    value={priceRange}
+                    onValueChange={setPriceRange}
+                    max={15000}
+                    min={3000}
+                    step={500}
+                    className="mt-2"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-sm text-gray-300 mb-2 block">Sharing</label>
+                  <Select value={sharingType} onValueChange={setSharingType}>
+                    <SelectTrigger className="bg-white/5 border-white/20 text-white">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All</SelectItem>
+                      <SelectItem value="2">2 Sharing</SelectItem>
+                      <SelectItem value="3">3 Sharing</SelectItem>
+                      <SelectItem value="4">4 Sharing</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+            </Card>
+          )}
+        </div>
+
+        {/* Hostel Cards */}
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filteredHostels.length > 0 ? (
+            filteredHostels.map((hostel, index) => (
+              <div
+                key={hostel.id}
+                className="animate-slide-in-up"
+                style={{animationDelay: `${0.3 + index * 0.1}s`}}
+              >
+                <HostelCard
+                  hostel={hostel}
+                  onClick={() => setSelectedHostel(hostel)}
+                />
+              </div>
+            ))
+          ) : (
+            <div className="col-span-full text-center py-12">
+              <div className="text-6xl mb-4">🔍</div>
+              <h3 className="text-xl font-semibold text-gray-300 mb-2">No hostels match your filters</h3>
+              <p className="text-gray-400">Try adjusting your filter criteria to see more options</p>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
