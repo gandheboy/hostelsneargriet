@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Search, MapPin, Wifi, Shield, Utensils, Car, Dumbbell, Zap, Users, Star, Filter } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -87,6 +87,41 @@ const Index = () => {
   const [distanceRange, setDistanceRange] = useState([10]);
   const [priceRange, setPriceRange] = useState([10000]);
   const [sharingType, setSharingType] = useState("all");
+
+  // Filter hostels based on current filter settings
+  const filteredHostels = useMemo(() => {
+    if (!showHostels) return [];
+
+    return mockHostels.filter(hostel => {
+      // Gender filter
+      if (genderFilter !== "all" && hostel.gender.toLowerCase() !== genderFilter.toLowerCase()) {
+        return false;
+      }
+
+      // Distance filter (convert distance string to number)
+      const hostelDistance = parseFloat(hostel.distance.split(" ")[0]);
+      if (hostelDistance > distanceRange[0]) {
+        return false;
+      }
+
+      // Price filter (check if any sharing type is within budget)
+      const prices = Object.values(hostel.pricing);
+      const hasAffordableOption = prices.some(price => price <= priceRange[0]);
+      if (!hasAffordableOption) {
+        return false;
+      }
+
+      // Sharing type filter
+      if (sharingType !== "all") {
+        const sharingKey = `${sharingType} Sharing`;
+        if (!hostel.pricing[sharingKey]) {
+          return false;
+        }
+      }
+
+      return true;
+    });
+  }, [showHostels, genderFilter, distanceRange, priceRange, sharingType]);
 
   useEffect(() => {
     if (searchQuery) {
@@ -189,6 +224,9 @@ const Index = () => {
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-2xl font-semibold text-white">
                 Hostels near <span className="text-gradient">{selectedCollege}</span>
+                <span className="text-sm text-gray-400 ml-2">
+                  ({filteredHostels.length} found)
+                </span>
               </h2>
               <Button
                 onClick={() => setShowFilters(!showFilters)}
@@ -269,18 +307,26 @@ const Index = () => {
         {/* Hostel Cards */}
         {showHostels && (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {mockHostels.map((hostel, index) => (
-              <div
-                key={hostel.id}
-                className="animate-slide-in-up"
-                style={{animationDelay: `${0.3 + index * 0.1}s`}}
-              >
-                <HostelCard
-                  hostel={hostel}
-                  onClick={() => setSelectedHostel(hostel)}
-                />
+            {filteredHostels.length > 0 ? (
+              filteredHostels.map((hostel, index) => (
+                <div
+                  key={hostel.id}
+                  className="animate-slide-in-up"
+                  style={{animationDelay: `${0.3 + index * 0.1}s`}}
+                >
+                  <HostelCard
+                    hostel={hostel}
+                    onClick={() => setSelectedHostel(hostel)}
+                  />
+                </div>
+              ))
+            ) : (
+              <div className="col-span-full text-center py-12">
+                <div className="text-6xl mb-4">🔍</div>
+                <h3 className="text-xl font-semibold text-gray-300 mb-2">No hostels match your filters</h3>
+                <p className="text-gray-400">Try adjusting your filter criteria to see more options</p>
               </div>
-            ))}
+            )}
           </div>
         )}
 
