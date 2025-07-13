@@ -1,73 +1,135 @@
-# Welcome to your Lovable project
 
-## Project info
+# HostelNest - HTML Version
 
-**URL**: https://lovable.dev/projects/bc259703-843a-4035-aaa2-0e940b6c454b
+A standalone HTML/CSS/JS version of the HostelNest hostel booking website, built with Bootstrap and Tailwind CSS.
 
-## How can I edit this code?
+## Features
 
-There are several ways of editing your application.
+- **Responsive Design**: Works perfectly on desktop, tablet, and mobile devices
+- **Advanced Filtering**: Filter hostels by gender, distance, price, and sharing type
+- **Interactive UI**: Smooth animations and hover effects
+- **Modal Details**: Detailed hostel information in a beautiful modal
+- **Glass Morphism Design**: Modern glassmorphism UI with gradient backgrounds
+- **Search Functionality**: Real-time filtering of hostel results
 
-**Use Lovable**
+## Technologies Used
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/bc259703-843a-4035-aaa2-0e940b6c454b) and start prompting.
+- **HTML5**: Semantic markup and modern web standards
+- **CSS3**: Custom animations, glass morphism effects, and responsive design
+- **JavaScript (ES6+)**: Modern JavaScript for interactivity
+- **Bootstrap 5**: Component framework for responsive design
+- **Tailwind CSS**: Utility-first CSS framework
+- **Lucide Icons**: Beautiful icon library
+- **Google Fonts**: Poppins font family
 
-Changes made via Lovable will be committed automatically to this repo.
+## File Structure
 
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+```
+├── index.html          # Main HTML file
+├── styles.css          # Custom CSS styles
+├── script.js           # JavaScript functionality
+└── README.md          # This file
 ```
 
-**Edit a file directly in GitHub**
+## Getting Started
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+1. **Download the files**: Save all files in the same directory
+2. **Open in browser**: Double-click `index.html` or open it in any modern web browser
+3. **No server required**: This is a static website that runs entirely in the browser
 
-**Use GitHub Codespaces**
+## Features Breakdown
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+### Filter System
+- **Gender Filter**: Filter by Male, Female, Co-ed, or All
+- **Distance Filter**: Set maximum distance from GRIET (0.5km to 10km)
+- **Price Filter**: Set maximum budget (₹3,000 to ₹10,000)
+- **Sharing Type**: Filter by 2, 3, 4 sharing or All
 
-## What technologies are used for this project?
+### Hostel Cards
+- High-quality images with hover effects
+- Star ratings and recommendations
+- Distance from GRIET
+- Facility tags
+- Pricing information
+- Click to view detailed information
 
-This project is built with:
+### Hostel Details Modal
+- Image gallery
+- Complete facility list
+- Detailed pricing for all sharing types
+- Book Now and Contact buttons
+- Responsive design
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+### Animations
+- Floating background elements
+- Smooth slide-in animations
+- Hover effects on cards
+- Modal transitions
+- Loading states
 
-## How can I deploy this project?
+## Customization
 
-Simply open [Lovable](https://lovable.dev/projects/bc259703-843a-4035-aaa2-0e940b6c454b) and click on Share -> Publish.
+### Adding New Hostels
+Edit the `mockHostels` array in `script.js`:
 
-## Can I connect a custom domain to my Lovable project?
+```javascript
+const mockHostels = [
+    {
+        id: 4, // Unique ID
+        name: "New Hostel Name",
+        distance: "1.5 km",
+        gender: "Co-ed", // Male, Female, or Co-ed
+        rating: 4.7,
+        isRecommended: true,
+        facilities: ["Wifi", "Mess", "Laundry"],
+        pricing: {
+            "2 Sharing": 9000,
+            "3 Sharing": 7500,
+            "4 Sharing": 6000
+        },
+        images: [
+            "https://example.com/image1.jpg",
+            "https://example.com/image2.jpg"
+        ]
+    }
+];
+```
 
-Yes, you can!
+### Styling Changes
+- **Colors**: Modify CSS variables in `styles.css`
+- **Fonts**: Change the Google Fonts import in `index.html`
+- **Layout**: Adjust Bootstrap classes or custom CSS
+- **Animations**: Modify keyframes in `styles.css`
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+## Browser Compatibility
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+- Chrome (recommended)
+- Firefox
+- Safari
+- Edge
+- Opera
+
+## Performance Features
+
+- Optimized images with proper sizing
+- Efficient filtering algorithms
+- Smooth animations with CSS transforms
+- Lazy loading considerations
+- Responsive image handling
+
+## Deployment
+
+This static website can be deployed to any web hosting service:
+
+- **Netlify**: Drag and drop the folder
+- **Vercel**: Connect to a Git repository
+- **GitHub Pages**: Upload to a repository
+- **Traditional hosting**: Upload files via FTP
+
+## License
+
+This project is open source and available under the MIT License.
+
+## Support
+
+For any issues or questions, please check the code comments or create an issue in the repository.
